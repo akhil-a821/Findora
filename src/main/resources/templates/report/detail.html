@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title th:text="${report.itemName + ' — CampusFind'}">Item Detail — CampusFind</title>
+</head>
+<body>
+<div th:fragment="content" class="py-5">
+    <div class="container">
+
+        <div class="row g-4">
+            <!-- Left Column: Item Image & Main Metadata -->
+            <div class="col-lg-5">
+                <div class="card card-custom p-3 border-0 shadow-sm text-center">
+                    <div class="rounded-4 overflow-hidden mb-3 bg-light" style="max-height: 380px;">
+                        <img th:src="${report.imageUrl != null ? report.imageUrl : '/images/placeholder-default.svg'}" th:alt="${report.itemName}" class="img-fluid w-100 object-fit-cover">
+                    </div>
+                    
+                    <div class="d-flex justify-content-center gap-2 mb-2">
+                        <span class="badge badge-custom px-3 py-2 fs-6" th:classappend="${report.type.name() == 'LOST' ? 'badge-lost' : 'badge-found'}">
+                            <i th:classappend="${report.type.name() == 'LOST' ? 'fa-circle-exclamation' : 'fa-circle-check'}" class="fa-solid me-1"></i>
+                            <span th:text="${report.type.name() + ' ITEM'}">LOST ITEM</span>
+                        </span>
+                        <span class="badge bg-dark px-3 py-2 fs-6 text-white" th:text="${'STATUS: ' + report.status.name()}">ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Full Details & Actions -->
+            <div class="col-lg-7">
+                <div class="card card-custom p-4 p-md-5 border-0 shadow-sm">
+                    
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h2 class="fw-bold mb-1" th:text="${report.itemName}">Item Name</h2>
+                            <p class="text-muted mb-0">Reported by <strong th:text="${report.user.name}">User</strong> on <span th:text="${#temporals.format(report.createdAt, 'MMM dd, yyyy HH:mm')}">Date</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Category & Location Badges -->
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="badge bg-light text-dark border p-2"><i class="fa-solid fa-tag me-1 text-primary"></i> <strong th:text="${report.category}">Category</strong></span>
+                        <span class="badge bg-light text-dark border p-2"><i class="fa-solid fa-location-dot me-1 text-danger"></i> <strong th:text="${report.location}">Location</strong></span>
+                        <span class="badge bg-light text-dark border p-2"><i class="fa-regular fa-calendar me-1 text-info"></i> <strong th:text="${#temporals.format(report.date, 'MMM dd, yyyy')}">Date</strong></span>
+                        <span class="badge bg-light text-dark border p-2" th:if="${report.time != null and !report.time.isBlank()}"><i class="fa-regular fa-clock me-1 text-warning"></i> <strong th:text="${report.time}">Time</strong></span>
+                    </div>
+
+                    <!-- Description Box -->
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-2">Description</h5>
+                        <p class="text-dark bg-light p-3 rounded-3 border" th:text="${report.description}">Full description here...</p>
+                    </div>
+
+                    <!-- Brand & Color Metadata -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6" th:if="${report.brand != null and !report.brand.isBlank()}">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <small class="text-muted d-block font-weight-bold">Brand</small>
+                                <span class="fw-bold text-dark" th:text="${report.brand}">Brand</span>
+                            </div>
+                        </div>
+                        <div class="col-6" th:if="${report.color != null and !report.color.isBlank()}">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <small class="text-muted d-block font-weight-bold">Color</small>
+                                <span class="fw-bold text-dark" th:text="${report.color}">Color</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Private Verification Details Box (Owner Only) -->
+                    <div th:if="${isOwner and report.privateVerificationDetails != null and !report.privateVerificationDetails.isBlank()}" 
+                         class="card p-3 border-warning bg-warning-subtle mb-4 rounded-3">
+                        <div class="fw-bold text-warning-emphasis mb-1"><i class="fa-solid fa-lock me-1"></i> Your Private Verification Details (Hidden from Public):</div>
+                        <p class="small mb-0 text-dark" th:text="${report.privateVerificationDetails}">Private verification information...</p>
+                    </div>
+
+                    <!-- Action Box for FOUND items (Claim This Item) -->
+                    <div th:if="${report.type.name() == 'FOUND' and !isOwner and report.status.name() == 'ACTIVE'}" 
+                         class="p-4 bg-primary-subtle rounded-4 border border-primary-subtle mb-4">
+                        <h5 class="fw-bold text-primary mb-1">Think this item belongs to you?</h5>
+                        <p class="text-dark small mb-3">Submit a claim explaining why this is your item and answering private verification questions.</p>
+                        
+                        <div sec:authorize="isAuthenticated()">
+                            <button type="button" class="btn btn-primary-custom btn-lg w-100" data-bs-toggle="modal" data-bs-target="#claimModal">
+                                <i class="fa-solid fa-hand-holding-heart me-2"></i> Claim This Item
+                            </button>
+                        </div>
+                        <div sec:authorize="isAnonymous()">
+                            <a th:href="@{/login}" class="btn btn-primary-custom btn-lg w-100">Log In to Submit Claim</a>
+                        </div>
+                    </div>
+
+                    <!-- Potential Matches Alert Section -->
+                    <div th:if="${!#lists.isEmpty(matches)}" class="mt-4 border-top pt-4">
+                        <h5 class="fw-bold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i> Potential Match Found</h5>
+                        <div th:each="m : ${matches}" class="card p-3 border mb-2 bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="match-score-badge text-white me-2" 
+                                          th:classappend="${m.score >= 90 ? 'score-excellent' : (m.score >= 75 ? 'score-strong' : 'score-possible')}"
+                                          th:text="${m.score + '% Match'}">87% Match</span>
+                                    <span class="fw-bold text-dark" th:text="${report.type.name() == 'LOST' ? m.foundReport.itemName : m.lostReport.itemName}">Item Name</span>
+                                </div>
+                                <a th:href="@{'/matches/' + ${m.id}}" class="btn btn-primary-custom btn-sm">View Match Breakdown</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Claim Modal -->
+    <div class="modal fade" id="claimModal" tabindex="-1" aria-labelledby="claimModalLabel" aria-hidden="true" th:if="${report.type.name() == 'FOUND'}">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content card-custom border-0 p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="claimModalLabel"><i class="fa-solid fa-hand-holding-heart text-primary me-2"></i> Submit Claim</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/claims}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="reportId" th:value="${report.id}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Why do you believe this item belongs to you? <span class="text-danger">*</span></label>
+                            <textarea name="explanation" class="form-control bg-light" rows="3" placeholder="Provide full context, where/when you lost it..." required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Verification Answer <span class="text-danger">*</span></label>
+                            <p class="small text-muted mb-1">Provide a specific private detail (e.g. serial number, contents inside, lock combination) so the finder can verify ownership.</p>
+                            <textarea name="verificationAnswer" class="form-control bg-light" rows="2" placeholder="e.g. Serial number, custom sticker, engraved text..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary-custom">Submit Verification Claim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

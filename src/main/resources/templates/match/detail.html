@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Potential Match Details — CampusFind</title>
+</head>
+<body>
+<div th:fragment="content" class="py-5">
+    <div class="container">
+
+        <!-- Match Score Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-block mb-3">
+                <span class="match-score-badge fs-4 px-4 py-2 text-white" 
+                      th:classappend="${match.score >= 90 ? 'score-excellent' : (match.score >= 75 ? 'score-strong' : 'score-possible')}">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
+                    <span th:text="${match.score + '% Potential Match'}">87% Potential Match</span>
+                </span>
+            </div>
+            <p class="text-muted">Our smart matching engine identified a high similarity between these two reports.</p>
+        </div>
+
+        <!-- Side-by-Side Comparison Cards -->
+        <div class="row g-4 mb-5 align-items-stretch">
+            
+            <!-- LOST ITEM CARD -->
+            <div class="col-md-6">
+                <div class="card card-custom h-100 p-4 border-danger border-2">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge badge-custom badge-lost fs-6"><i class="fa-solid fa-circle-exclamation me-1"></i> LOST ITEM</span>
+                        <span class="text-muted small" th:text="${#temporals.format(lostReport.createdAt, 'MMM dd, yyyy')}">Date</span>
+                    </div>
+
+                    <div class="rounded-3 overflow-hidden mb-3 bg-light" style="max-height: 200px;">
+                        <img th:src="${lostReport.imageUrl != null ? lostReport.imageUrl : '/images/placeholder-default.svg'}" th:alt="${lostReport.itemName}" class="img-fluid w-100 object-fit-cover">
+                    </div>
+
+                    <h4 class="fw-bold mb-2 text-dark" th:text="${lostReport.itemName}">AirPods Pro</h4>
+                    <p class="text-muted small mb-3" th:text="${lostReport.description}">Description...</p>
+
+                    <div class="bg-light p-3 rounded-3 border mt-auto">
+                        <div class="row g-2 small">
+                            <div class="col-6"><strong>Category:</strong> <span th:text="${lostReport.category}">Electronics</span></div>
+                            <div class="col-6"><strong>Location:</strong> <span th:text="${lostReport.location}">Library</span></div>
+                            <div class="col-6"><strong>Date Lost:</strong> <span th:text="${#temporals.format(lostReport.date, 'MMM dd, yyyy')}">Jul 30</span></div>
+                            <div class="col-6"><strong>Color:</strong> <span th:text="${lostReport.color != null ? lostReport.color : 'N/A'}">White</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOUND ITEM CARD -->
+            <div class="col-md-6">
+                <div class="card card-custom h-100 p-4 border-success border-2">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge badge-custom badge-found fs-6"><i class="fa-solid fa-circle-check me-1"></i> FOUND ITEM</span>
+                        <span class="text-muted small" th:text="${#temporals.format(foundReport.createdAt, 'MMM dd, yyyy')}">Date</span>
+                    </div>
+
+                    <div class="rounded-3 overflow-hidden mb-3 bg-light" style="max-height: 200px;">
+                        <img th:src="${foundReport.imageUrl != null ? foundReport.imageUrl : '/images/placeholder-default.svg'}" th:alt="${foundReport.itemName}" class="img-fluid w-100 object-fit-cover">
+                    </div>
+
+                    <h4 class="fw-bold mb-2 text-dark" th:text="${foundReport.itemName}">Wireless Earbuds</h4>
+                    <p class="text-muted small mb-3" th:text="${foundReport.description}">Description...</p>
+
+                    <div class="bg-light p-3 rounded-3 border mt-auto">
+                        <div class="row g-2 small">
+                            <div class="col-6"><strong>Category:</strong> <span th:text="${foundReport.category}">Electronics</span></div>
+                            <div class="col-6"><strong>Location:</strong> <span th:text="${foundReport.location}">Library</span></div>
+                            <div class="col-6"><strong>Date Found:</strong> <span th:text="${#temporals.format(foundReport.date, 'MMM dd, yyyy')}">Jul 30</span></div>
+                            <div class="col-6"><strong>Color:</strong> <span th:text="${foundReport.color != null ? foundReport.color : 'N/A'}">White</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Why This May Be a Match Breakdown Box -->
+        <div class="card card-custom p-4 p-md-5 border-0 shadow-sm mb-5">
+            <h4 class="fw-bold mb-3"><i class="fa-solid fa-list-check text-primary me-2"></i> Why this may be a match</h4>
+            <ul class="list-group list-group-flush mb-4">
+                <li th:each="factor : ${match.matchingFactors}" class="list-group-item px-0 py-2 border-0 fs-6">
+                    <span class="text-success fw-bold me-2" th:text="${factor}">✓ Matching category</span>
+                </li>
+            </ul>
+
+            <div class="pt-3 border-top d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+                <a th:href="@{'/item/' + ${foundReport.id}}" class="btn btn-primary-custom btn-lg"><i class="fa-solid fa-hand-holding-heart me-2"></i> Submit Claim for Found Item</a>
+                <a th:href="@{/dashboard}" class="btn btn-outline-custom">Back to Dashboard</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

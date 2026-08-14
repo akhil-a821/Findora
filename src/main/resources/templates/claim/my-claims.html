@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>My Claims — CampusFind</title>
+</head>
+<body>
+<div th:fragment="content" class="py-4">
+    <div class="container">
+        
+        <div class="mb-4">
+            <h2 class="fw-bold mb-1">Item Claims</h2>
+            <p class="text-muted mb-0">Track claims you've submitted or review claims on items you found.</p>
+        </div>
+
+        <!-- Claims Tabs -->
+        <ul class="nav nav-pills mb-4 gap-2" id="claimTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-bold px-4 py-2" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button" role="tab">
+                    <i class="fa-solid fa-inbox me-2"></i> Claims Received (<span th:text="${receivedClaims.size()}">0</span>)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold px-4 py-2" id="submitted-tab" data-bs-toggle="tab" data-bs-target="#submitted" type="button" role="tab">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Claims Submitted (<span th:text="${submittedClaims.size()}">0</span>)
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="claimTabsContent">
+            
+            <!-- Tab 1: Claims Received on Found Items -->
+            <div class="tab-pane fade show active" id="received" role="tabpanel">
+                <div th:if="${#lists.isEmpty(receivedClaims)}" class="empty-state">
+                    <div class="empty-state-icon"><i class="fa-solid fa-inbox"></i></div>
+                    <h5 class="fw-bold">No claims received yet</h5>
+                    <p class="text-muted small mb-0">When someone submits a claim for an item you found, it will appear here for your review.</p>
+                </div>
+
+                <div th:each="c : ${receivedClaims}" class="card card-custom p-4 mb-3 border-0 shadow-sm">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+                        <div>
+                            <span class="badge bg-primary text-white mb-1" th:text="${'CLAIM #' + c.id}">CLAIM #1</span>
+                            <h5 class="fw-bold mb-0">Claim for: <a th:href="@{'/item/' + ${c.report.id}}" class="text-primary text-decoration-none" th:text="${c.report.itemName}">Item Name</a></h5>
+                            <small class="text-muted">Submitted by <strong th:text="${c.claimant.name}">Claimant Name</strong> (<span th:text="${c.claimant.email}">email</span>) on <span th:text="${#temporals.format(c.createdAt, 'MMM dd, yyyy HH:mm')}">Date</span></small>
+                        </div>
+                        <div>
+                            <span class="badge px-3 py-2 fs-6" 
+                                  th:classappend="${c.status.name() == 'PENDING' ? 'bg-warning text-dark' : (c.status.name() == 'APPROVED' ? 'bg-success text-white' : 'bg-danger text-white')}"
+                                  th:text="${c.status.name()}">PENDING</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 bg-light p-3 rounded-3 border mb-3">
+                        <div class="col-md-6 border-end">
+                            <strong class="text-dark small d-block mb-1"><i class="fa-solid fa-quote-left text-muted me-1"></i> Claimant's Explanation:</strong>
+                            <p class="small text-dark mb-0" th:text="${c.explanation}">Explanation provided...</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong class="text-dark small d-block mb-1"><i class="fa-solid fa-key text-muted me-1"></i> Verification Answer:</strong>
+                            <p class="small text-dark mb-0" th:text="${c.verificationAnswer}">Answer details...</p>
+                        </div>
+                    </div>
+
+                    <!-- Finder Action Buttons -->
+                    <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center pt-2">
+                        <div th:if="${c.status.name() == 'PENDING'}" class="d-flex gap-2">
+                            <form th:action="@{'/claims/approve/' + ${c.id}}" method="post">
+                                <button type="submit" class="btn btn-success font-weight-bold"><i class="fa-solid fa-check me-1"></i> Approve Claim</button>
+                            </form>
+                            <form th:action="@{'/claims/reject/' + ${c.id}}" method="post">
+                                <button type="submit" class="btn btn-outline-danger font-weight-bold"><i class="fa-solid fa-xmark me-1"></i> Reject Claim</button>
+                            </form>
+                        </div>
+
+                        <div th:if="${c.status.name() == 'APPROVED' and c.report.status.name() != 'RETURNED'}">
+                            <form th:action="@{'/claims/return/' + ${c.report.id}}" method="post">
+                                <button type="submit" class="btn btn-primary-custom"><i class="fa-solid fa-heart-circle-check me-1"></i> Mark as Returned</button>
+                            </form>
+                        </div>
+
+                        <div th:if="${c.report.status.name() == 'RETURNED'}">
+                            <span class="badge bg-secondary-subtle text-secondary fs-6 p-2"><i class="fa-solid fa-heart text-danger me-1"></i> Item Returned to Owner</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Claims Submitted by User -->
+            <div class="tab-pane fade" id="submitted" role="tabpanel">
+                <div th:if="${#lists.isEmpty(submittedClaims)}" class="empty-state">
+                    <div class="empty-state-icon"><i class="fa-solid fa-paper-plane"></i></div>
+                    <h5 class="fw-bold">No claims submitted yet</h5>
+                    <p class="text-muted small mb-0">When you claim a found item, your submission status will be tracked here.</p>
+                </div>
+
+                <div th:each="c : ${submittedClaims}" class="card card-custom p-4 mb-3 border-0 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold mb-0">Claim for: <a th:href="@{'/item/' + ${c.report.id}}" class="text-primary text-decoration-none" th:text="${c.report.itemName}">Found Item</a></h5>
+                        <span class="badge px-3 py-2 fs-6" 
+                              th:classappend="${c.status.name() == 'PENDING' ? 'bg-warning text-dark' : (c.status.name() == 'APPROVED' ? 'bg-success text-white' : 'bg-danger text-white')}"
+                              th:text="${c.status.name()}">PENDING</span>
+                    </div>
+
+                    <p class="text-muted small mb-2">Submitted on <span th:text="${#temporals.format(c.createdAt, 'MMM dd, yyyy HH:mm')}">Date</span></p>
+
+                    <div class="bg-light p-3 rounded-3 border">
+                        <strong class="text-dark small d-block mb-1">Your Claim Explanation:</strong>
+                        <p class="small text-dark mb-0" th:text="${c.explanation}">Your explanation text...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

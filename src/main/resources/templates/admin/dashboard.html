@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Admin Moderation Panel — CampusFind</title>
+</head>
+<body>
+<div th:fragment="content" class="py-4">
+    <div class="container">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1 text-danger"><i class="fa-solid fa-user-shield me-2"></i> Admin Moderation Panel</h2>
+                <p class="text-muted mb-0">System-wide monitoring, user accounts, and report moderation.</p>
+            </div>
+            <span class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 fw-bold">ROLE_ADMIN ACCESS</span>
+        </div>
+
+        <!-- Admin Statistics Cards Grid -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card card-custom p-3 border-0 bg-white shadow-sm text-center">
+                    <div class="text-muted small fw-bold text-uppercase">Total Users</div>
+                    <div class="fs-3 fw-bold text-primary" th:text="${totalUsers}">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-custom p-3 border-0 bg-white shadow-sm text-center">
+                    <div class="text-muted small fw-bold text-uppercase">Total Reports</div>
+                    <div class="fs-3 fw-bold text-dark" th:text="${totalReports}">0</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-custom p-3 border-0 bg-white shadow-sm text-center">
+                    <div class="text-muted small fw-bold text-uppercase">Lost / Found</div>
+                    <div class="fs-3 fw-bold text-info"><span th:text="${lostReports}">0</span> / <span th:text="${foundReports}">0</span></div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card card-custom p-3 border-0 bg-white shadow-sm text-center">
+                    <div class="text-muted small fw-bold text-uppercase">Returned Items</div>
+                    <div class="fs-3 fw-bold text-success" th:text="${returnedItems}">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Moderation Section -->
+        <div class="card card-custom p-4 border-0 shadow-sm mb-4">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-list-check text-primary me-2"></i> System Reports Moderation</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Item Name</th>
+                            <th>Type</th>
+                            <th>User</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r : ${reports}">
+                            <td class="fw-bold" th:text="${'#' + r.id}">#1</td>
+                            <td>
+                                <a th:href="@{'/item/' + ${r.id}}" class="fw-bold text-primary text-decoration-none" th:text="${r.itemName}">Item</a>
+                            </td>
+                            <td>
+                                <span class="badge" th:classappend="${r.type.name() == 'LOST' ? 'bg-danger' : 'bg-success'}" th:text="${r.type.name()}">LOST</span>
+                            </td>
+                            <td th:text="${r.user.name}">User</td>
+                            <td th:text="${r.location}">Location</td>
+                            <td th:text="${#temporals.format(r.date, 'MMM dd')}">Jul 30</td>
+                            <td>
+                                <span class="badge bg-secondary" th:text="${r.status.name()}">ACTIVE</span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <form th:action="@{'/admin/reports/close/' + ${r.id}}" method="post" onsubmit="return confirm('Close this report?');">
+                                        <button type="submit" class="btn btn-warning btn-sm text-dark font-weight-bold" title="Close Report"><i class="fa-solid fa-lock"></i></button>
+                                    </form>
+                                    <form th:action="@{'/admin/reports/delete/' + ${r.id}}" method="post" onsubmit="return confirm('ADMIN WARNING: Delete this report permanently?');">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete Report"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card card-custom p-4 border-0 shadow-sm">
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-users text-primary me-2"></i> Registered System Users</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>College Email</th>
+                            <th>Role</th>
+                            <th>Registered Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u : ${users}">
+                            <td class="fw-bold" th:text="${'#' + u.id}">#1</td>
+                            <td class="fw-bold" th:text="${u.name}">User Name</td>
+                            <td th:text="${u.email}">user@campus.edu</td>
+                            <td>
+                                <span class="badge" th:classappend="${u.role.name() == 'ROLE_ADMIN' ? 'bg-danger' : 'bg-primary'}" th:text="${u.role.name()}">ROLE_USER</span>
+                            </td>
+                            <td th:text="${#temporals.format(u.createdAt, 'MMM dd, yyyy HH:mm')}">Date</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

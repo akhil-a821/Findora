@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Notifications — CampusFind</title>
+</head>
+<body>
+<div th:fragment="content" class="py-4">
+    <div class="container">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1"><i class="fa-solid fa-bell text-primary me-2"></i> Notifications</h2>
+                <p class="text-muted mb-0">Stay updated on potential matches, claims, and return status updates.</p>
+            </div>
+            <form th:action="@{/notifications/read-all}" method="post" th:if="${!#lists.isEmpty(notifications)}">
+                <button type="submit" class="btn btn-outline-custom btn-sm"><i class="fa-solid fa-check-double me-1"></i> Mark All as Read</button>
+            </form>
+        </div>
+
+        <div th:if="${#lists.isEmpty(notifications)}" class="empty-state">
+            <div class="empty-state-icon"><i class="fa-regular fa-bell-slash"></i></div>
+            <h5 class="fw-bold">No notifications yet</h5>
+            <p class="text-muted small mb-0">You're all caught up! New alerts will appear here when match or claim activities occur.</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(notifications)}" class="card card-custom border-0 shadow-sm overflow-hidden">
+            <div class="list-group list-group-flush">
+                <div th:each="n : ${notifications}" 
+                     class="list-group-item p-4 d-flex justify-content-between align-items-center border-bottom transition"
+                     th:classappend="${!n.readStatus ? 'bg-light border-start border-4 border-primary' : 'opacity-75'}">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge bg-primary-subtle text-primary fw-bold" th:text="${n.type}">MATCH_FOUND</span>
+                            <h6 class="fw-bold mb-0 text-dark" th:text="${n.title}">Title</h6>
+                        </div>
+                        <p class="mb-1 text-muted" th:text="${n.message}">Notification message content...</p>
+                        <small class="text-muted"><i class="fa-regular fa-clock me-1"></i> <span th:text="${#temporals.format(n.createdAt, 'MMM dd, yyyy HH:mm')}">Time</span></small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 ms-3">
+                        <a th:if="${n.targetUrl != null}" th:href="${n.targetUrl}" class="btn btn-primary-custom btn-sm">View <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

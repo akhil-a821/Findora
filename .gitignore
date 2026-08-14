@@ -1,0 +1,33 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!target/classes/META-INF/
+!target/test-classes/META-INF/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### VS Code ###
+.vscode/
+
+### System Files ###
+.DS_Store
+Thumbs.db
+
+### Local Database & Firebase Credentials ###
+data/
+*.mv.db
+*.trace.db
+serviceAccountKey.json
+
