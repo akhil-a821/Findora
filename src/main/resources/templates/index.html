@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
 <head>
-    <title>CampusFind — Smart College Lost &amp; Found System</title>
+    <title>Findora — Smart College Lost &amp; Found System</title>
 </head>
 <body>
 <div th:fragment="content">
@@ -11,14 +11,14 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-9">
-                    <span class="badge badge-custom bg-primary-subtle text-primary mb-3 px-3 py-2">
+                    <span class="badge badge-custom bg-primary-subtle text-primary mb-3 px-3 py-2 animate-hero-badge">
                         <i class="fa-solid fa-wand-magic-sparkles me-1"></i> AI-Assisted Smart Matching Engine
                     </span>
-                    <h1 class="hero-title mb-3">Lost something on campus?<br><span class="text-primary">Let's find it.</span></h1>
-                    <p class="hero-subtitle mb-4">
-                        CampusFind connects lost and found reports across your college and intelligently identifies potential matches.
+                    <h1 class="hero-title mb-3 animate-hero-title">Lost something on campus?<br><span class="text-primary">Let's find it.</span></h1>
+                    <p class="hero-subtitle mb-4 animate-hero-subtitle">
+                        Findora connects lost and found reports across your college and intelligently identifies potential matches.
                     </p>
-                    <div class="d-flex justify-content-center gap-3 mb-5">
+                    <div class="d-flex justify-content-center gap-3 mb-5 animate-hero-buttons">
                         <a th:href="@{/report}" class="btn btn-primary-custom btn-lg"><i class="fa-solid fa-plus me-2"></i> Report an Item</a>
                         <a th:href="@{/browse}" class="btn btn-outline-custom btn-lg"><i class="fa-solid fa-magnifying-glass me-2"></i> Browse Lost &amp; Found</a>
                     </div>
@@ -28,25 +28,25 @@
             <!-- Statistics Cards -->
             <div class="row g-4 mt-2">
                 <div class="col-6 col-md-3">
-                    <div class="stat-box">
+                    <div class="stat-box stat-box-animated" style="animation-delay: 0.5s;">
                         <div class="stat-number" th:text="${totalReported}">0</div>
                         <div class="stat-label">Items Reported</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="stat-box">
+                    <div class="stat-box stat-box-animated" style="animation-delay: 0.6s;">
                         <div class="stat-number text-success" th:text="${totalReturned}">0</div>
                         <div class="stat-label">Items Reunited</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="stat-box">
+                    <div class="stat-box stat-box-animated" style="animation-delay: 0.7s;">
                         <div class="stat-number text-warning" th:text="${activeReports}">0</div>
                         <div class="stat-label">Active Reports</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <div class="stat-box">
+                    <div class="stat-box stat-box-animated" style="animation-delay: 0.8s;">
                         <div class="stat-number text-secondary" th:text="${potentialMatches}">0</div>
                         <div class="stat-label">Potential Matches</div>
                     </div>
@@ -59,12 +59,12 @@
     <section class="py-5 bg-white border-top border-bottom">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold mb-2">How CampusFind Works</h2>
+                <h2 class="fw-bold mb-2">How Findora Works</h2>
                 <p class="text-muted">Four simple steps to reunite lost possessions with their rightful owners.</p>
             </div>
             <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="card card-custom h-100 p-4 text-center">
+                    <div class="card card-custom step-card-animated h-100 p-4 text-center" style="animation-delay: 0.2s;">
                         <div class="mb-3 text-primary"><i class="fa-solid fa-pen-to-square fa-3x"></i></div>
                         <div class="badge bg-primary text-white mb-2 mx-auto" style="width: fit-content;">01 — REPORT</div>
                         <h5 class="fw-bold">Tell Us What Happened</h5>
@@ -72,15 +72,15 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card card-custom h-100 p-4 text-center">
+                    <div class="card card-custom step-card-animated h-100 p-4 text-center" style="animation-delay: 0.35s;">
                         <div class="mb-3 text-primary"><i class="fa-solid fa-gears fa-3x"></i></div>
                         <div class="badge bg-primary text-white mb-2 mx-auto" style="width: fit-content;">02 — SMART MATCH</div>
                         <h5 class="fw-bold">Intelligent Scoring</h5>
-                        <p class="text-muted small">CampusFind compares reports using item categories, locations, dates, and attributes.</p>
+                        <p class="text-muted small">Findora compares reports using item categories, locations, dates, and attributes.</p>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card card-custom h-100 p-4 text-center">
+                    <div class="card card-custom step-card-animated h-100 p-4 text-center" style="animation-delay: 0.5s;">
                         <div class="mb-3 text-primary"><i class="fa-solid fa-shield-halved fa-3x"></i></div>
                         <div class="badge bg-primary text-white mb-2 mx-auto" style="width: fit-content;">03 — VERIFY</div>
                         <h5 class="fw-bold">Review &amp; Claim</h5>
@@ -88,7 +88,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card card-custom h-100 p-4 text-center">
+                    <div class="card card-custom step-card-animated h-100 p-4 text-center" style="animation-delay: 0.65s;">
                         <div class="mb-3 text-primary"><i class="fa-solid fa-heart-circle-check fa-3x"></i></div>
                         <div class="badge bg-primary text-white mb-2 mx-auto" style="width: fit-content;">04 — REUNITE</div>
                         <h5 class="fw-bold">Item Returned</h5>
@@ -108,8 +108,8 @@
             </div>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="d-flex gap-3 align-items-start">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3"><i class="fa-solid fa-brain fa-xl"></i></div>
+                    <div class="d-flex gap-3 align-items-start feature-box-animated" style="animation-delay: 0.1s;">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 feature-icon-wrapper"><i class="fa-solid fa-brain fa-xl"></i></div>
                         <div>
                             <h5 class="fw-bold mb-1">Smart Matching</h5>
                             <p class="text-muted small mb-0">Rule-based 100-point algorithm calculating proximity, category, and keyword matches.</p>
@@ -117,8 +117,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="d-flex gap-3 align-items-start">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3"><i class="fa-solid fa-building-columns fa-xl"></i></div>
+                    <div class="d-flex gap-3 align-items-start feature-box-animated" style="animation-delay: 0.2s;">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 feature-icon-wrapper"><i class="fa-solid fa-building-columns fa-xl"></i></div>
                         <div>
                             <h5 class="fw-bold mb-1">Campus-wide Search</h5>
                             <p class="text-muted small mb-0">Search library, canteen, labs, and hostel reports in real time.</p>
@@ -126,8 +126,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="d-flex gap-3 align-items-start">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3"><i class="fa-solid fa-lock fa-xl"></i></div>
+                    <div class="d-flex gap-3 align-items-start feature-box-animated" style="animation-delay: 0.3s;">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 feature-icon-wrapper"><i class="fa-solid fa-lock fa-xl"></i></div>
                         <div>
                             <h5 class="fw-bold mb-1">Secure Verification</h5>
                             <p class="text-muted small mb-0">Private verification details ensure items are returned only to the true owner.</p>
@@ -135,8 +135,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="d-flex gap-3 align-items-start">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3"><i class="fa-solid fa-list-check fa-xl"></i></div>
+                    <div class="d-flex gap-3 align-items-start feature-box-animated" style="animation-delay: 0.4s;">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 feature-icon-wrapper"><i class="fa-solid fa-list-check fa-xl"></i></div>
                         <div>
                             <h5 class="fw-bold mb-1">Report Tracking</h5>
                             <p class="text-muted small mb-0">Track active, matched, claimed, and returned item statuses from your dashboard.</p>
@@ -144,8 +144,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="d-flex gap-3 align-items-start">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3"><i class="fa-solid fa-bell fa-xl"></i></div>
+                    <div class="d-flex gap-3 align-items-start feature-box-animated" style="animation-delay: 0.5s;">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 feature-icon-wrapper"><i class="fa-solid fa-bell fa-xl"></i></div>
                         <div>
                             <h5 class="fw-bold mb-1">Instant Notifications</h5>
                             <p class="text-muted small mb-0">Receive alerts when potential matches or new claims are submitted.</p>
@@ -153,8 +153,8 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="d-flex gap-3 align-items-start">
-                        <div class="p-3 bg-primary-subtle text-primary rounded-3"><i class="fa-solid fa-mobile-screen-button fa-xl"></i></div>
+                    <div class="d-flex gap-3 align-items-start feature-box-animated" style="animation-delay: 0.6s;">
+                        <div class="p-3 bg-primary-subtle text-primary rounded-3 feature-icon-wrapper"><i class="fa-solid fa-mobile-screen-button fa-xl"></i></div>
                         <div>
                             <h5 class="fw-bold mb-1">Mobile Friendly</h5>
                             <p class="text-muted small mb-0">Responsive startup interface optimized for smart phones, tablets, and laptops.</p>
@@ -166,7 +166,7 @@
     </section>
 
     <!-- Final Call to Action -->
-    <section class="py-5 bg-primary text-white text-center rounded-4 my-5 container shadow-lg">
+    <section class="py-5 bg-primary text-white text-center rounded-4 my-5 container shadow-lg cta-banner-animated">
         <div class="py-3">
             <h2 class="fw-bold mb-3">Help return something that someone lost.</h2>
             <p class="mb-4 opacity-90">Found an item on campus? Post a report in less than two minutes.</p>
@@ -177,3 +177,4 @@
 </div>
 </body>
 </html>
+

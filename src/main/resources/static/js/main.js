@@ -1,4 +1,14 @@
-// CampusFind JavaScript Frontend Interactivity
+// Findora JavaScript Frontend Interactivity
+
+// 0. Preloader Auto-Dismissal with 1s display delay
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('appPreloader');
+    if (preloader) {
+        setTimeout(() => {
+            preloader.classList.add('preloader-hidden');
+        }, 1000);
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Toast Notification Auto-Dismissal

@@ -1,4 +1,4 @@
-/* CampusFind — Modern Startup Styling System */
+/* Findora — Modern Startup Styling System */
 :root {
   --primary: #4f46e5;
   --primary-hover: #4338ca;
@@ -310,6 +310,328 @@ footer {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+/* ==========================================================================
+   Full-Screen App Preloader
+   ========================================================================== */
+#appPreloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+#appPreloader.preloader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-logo-ring {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-light), #e0e7ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  box-shadow: 0 0 30px rgba(79, 70, 229, 0.25);
+  animation: preloaderPulse 1.8s ease-in-out infinite;
+  margin-bottom: 1.25rem;
+}
+
+.preloader-brand {
+  font-weight: 800;
+  font-size: 1.85rem;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.preloader-brand span {
+  color: var(--primary);
+}
+
+.preloader-bar-container {
+  width: 140px;
+  height: 4px;
+  background: var(--primary-light);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.preloader-bar-fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 4px;
+  position: absolute;
+  animation: preloaderBar 1.2s ease-in-out infinite;
+}
+
+@keyframes preloaderPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.2);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(124, 58, 237, 0.45);
+  }
+}
+
+@keyframes preloaderBar {
+  0% {
+    left: -50%;
+    width: 30%;
+  }
+  50% {
+    width: 60%;
+  }
+  100% {
+    left: 100%;
+    width: 30%;
+  }
+}
+
+
+/* ==========================================================================
+   Homepage Entrance & Scroll Animations
+   ========================================================================== */
+.animate-hero-badge {
+  animation: fadeInDown 0.6s ease-out forwards;
+}
+
+.animate-hero-title {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.animate-hero-subtitle {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.animate-hero-buttons {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+
+.stat-box-animated {
+  animation: zoomIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-box-animated:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(79, 70, 229, 0.12);
+}
+
+.step-card-animated {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: all 0.35s ease;
+}
+
+.step-card-animated:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px -10px rgba(79, 70, 229, 0.18);
+}
+
+.feature-box-animated {
+  animation: fadeIn 0.8s ease-out both;
+  transition: transform 0.3s ease;
+}
+
+.feature-box-animated:hover {
+  transform: translateX(6px);
+}
+
+.feature-icon-wrapper {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.feature-box-animated:hover .feature-icon-wrapper {
+  transform: scale(1.15) rotate(6deg);
+  background-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+.cta-banner-animated {
+  animation: pulseGlow 4s infinite alternate;
+  transition: transform 0.3s ease;
+}
+
+.cta-banner-animated:hover {
+  transform: scale(1.01);
+}
+
+/* Additional Keyframes */
+@keyframes heroSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+/* ==========================================================================
+   Login Page & Interactive Animations
+   ========================================================================== */
+.login-card-animated {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.15), 0 10px 20px -10px rgba(0, 0, 0, 0.04);
+  animation: fadeInUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card-animated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), #ec4899);
+  background-size: 200% 100%;
+  animation: gradientShift 4s ease infinite;
+}
+
+.login-icon-glow {
+  width: 68px;
+  height: 68px;
+  background: linear-gradient(135deg, var(--primary-light), #e0e7ff);
+  color: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.25);
+  animation: pulseGlow 3s ease-in-out infinite;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.login-icon-glow:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.animated-input-group {
+  transition: all 0.3s ease;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1.5px solid var(--border-color);
+}
+
+.animated-input-group:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+  transform: translateY(-2px);
+}
+
+.animated-input-group .input-group-text {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.animated-input-group:focus-within .input-group-text {
+  color: var(--primary) !important;
+  background-color: var(--primary-light) !important;
+}
+
+.btn-login-animated {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background-size: 200% 100%;
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-login-animated:hover {
+  background-position: 100% 0;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+  color: #fff;
+}
+
+.btn-login-animated:active {
+  transform: translateY(-1px);
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(124, 58, 237, 0.45);
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 
 /* ==========================================================================
    Responsive Mobile Adjustments
