@@ -95,7 +95,7 @@ public class ReportService {
         }
 
         String newFileName = UUID.randomUUID().toString() + fileExtension;
-        Path uploadPath = Paths.get("src/main/resources/static/uploads");
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);

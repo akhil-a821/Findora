@@ -1,5 +1,6 @@
 package com.campusfind.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -10,12 +11,16 @@ import java.nio.file.Paths;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        Path uploadDir = Paths.get("src/main/resources/static/uploads");
-        String uploadPath = uploadDir.toFile().getAbsolutePath();
+        Path path = Paths.get(uploadDir).toAbsolutePath().normalize();
+        String uploadPath = path.toUri().toString();
 
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:/" + uploadPath + "/");
+                .addResourceLocations(uploadPath.endsWith("/") ? uploadPath : uploadPath + "/");
     }
 }
+
