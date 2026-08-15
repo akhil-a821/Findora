@@ -1,12 +1,22 @@
-// Findora JavaScript Frontend Interactivity
+// 0. Preloader Auto-Dismissal (Only runs on initial site opening, skipped during page navigation)
+(function() {
+    if (sessionStorage.getItem('findoraVisited')) {
+        // Hide immediately if user already opened the site in this browser session
+        document.documentElement.classList.add('skip-preloader');
+    }
+})();
 
-// 0. Preloader Auto-Dismissal with 1s display delay
 window.addEventListener('load', () => {
     const preloader = document.getElementById('appPreloader');
     if (preloader) {
-        setTimeout(() => {
-            preloader.classList.add('preloader-hidden');
-        }, 1000);
+        if (sessionStorage.getItem('findoraVisited')) {
+            preloader.style.display = 'none';
+        } else {
+            sessionStorage.setItem('findoraVisited', 'true');
+            setTimeout(() => {
+                preloader.classList.add('preloader-hidden');
+            }, 1000);
+        }
     }
 });
 

@@ -329,9 +329,11 @@ footer {
   transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 
-#appPreloader.preloader-hidden {
+#appPreloader.preloader-hidden,
+.skip-preloader #appPreloader {
   opacity: 0;
   visibility: hidden;
+  display: none !important;
   pointer-events: none;
 }
 
