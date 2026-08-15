@@ -1,7 +1,13 @@
-// 0. Preloader Auto-Dismissal (Only runs on initial site opening, skipped during page navigation)
+// 0. Dark Mode Theme System with localStorage Persistence & Bootstrap 5 Compatibility
+(function() {
+    const savedTheme = localStorage.getItem('findoraTheme') || 'light';
+    document.documentElement.setAttribute('data-bs-theme', savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+})();
+
+// Preloader Auto-Dismissal (Only runs on initial site opening, skipped during page navigation)
 (function() {
     if (sessionStorage.getItem('findoraVisited')) {
-        // Hide immediately if user already opened the site in this browser session
         document.documentElement.classList.add('skip-preloader');
     }
 })();
@@ -15,12 +21,39 @@ window.addEventListener('load', () => {
             sessionStorage.setItem('findoraVisited', 'true');
             setTimeout(() => {
                 preloader.classList.add('preloader-hidden');
-            }, 1000);
+            }, 2000);
         }
     }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Theme Toggle Button Handler
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    function updateThemeIcon(theme) {
+        if (themeIcon) {
+            if (theme === 'dark') {
+                themeIcon.className = 'fa-solid fa-sun text-warning';
+            } else {
+                themeIcon.className = 'fa-solid fa-moon text-primary';
+            }
+        }
+    }
+
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateThemeIcon(currentTheme);
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const activeTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('findoraTheme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+    }
     // 1. Toast Notification Auto-Dismissal
     const toastElements = document.querySelectorAll('.toast');
     toastElements.forEach(toastEl => {
