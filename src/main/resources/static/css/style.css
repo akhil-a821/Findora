@@ -310,3 +310,71 @@ footer {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+/* ==========================================================================
+   Responsive Mobile Adjustments
+   ========================================================================== */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px; /* Scaled down base font size for mobile devices */
+  }
+
+  .navbar-custom {
+    padding: 0.6rem 1rem;
+  }
+
+  .navbar-brand-logo {
+    font-size: 1.2rem;
+  }
+
+  .hero-section {
+    padding: 2.5rem 0 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.85rem;
+    letter-spacing: -0.5px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .btn-lg {
+    padding: 0.55rem 1.1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  .stat-box {
+    padding: 1rem 0.5rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .card-img-wrapper {
+    height: 160px;
+  }
+
+  .empty-state {
+    padding: 2.5rem 1rem;
+  }
+
+  .empty-state-icon {
+    font-size: 2.5rem;
+  }
+
+  h2, .h2 {
+    font-size: 1.4rem;
+  }
+
+  h3, .h3 {
+    font-size: 1.2rem;
+  }
+}
+
