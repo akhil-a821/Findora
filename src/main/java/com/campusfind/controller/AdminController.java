@@ -83,4 +83,15 @@ public class AdminController {
         }
         return "redirect:/admin";
     }
+
+    @PostMapping("/users/delete/{id}")
+    public String adminDeleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUser(id);
+            redirectAttributes.addFlashAttribute("successMessage", "User and all associated data permanently removed.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin";
+    }
 }

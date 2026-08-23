@@ -27,6 +27,7 @@ public class HomeController {
         model.addAttribute("totalReturned", reportService.countByStatus(ReportStatus.RETURNED));
         model.addAttribute("activeReports", reportService.countByStatus(ReportStatus.ACTIVE));
         model.addAttribute("potentialMatches", matchingService.countMatches());
+        model.addAttribute("recentReports", reportService.getRecentActiveReports(6));
         model.addAttribute("topFinders", userService.getTopFindersLeaderboard().stream().limit(5).toList());
 
         return "index";

@@ -11,6 +11,7 @@ public class UserRegistrationDto {
 
     @NotBlank(message = "College email is required")
     @Email(message = "Please enter a valid email address")
+    @jakarta.validation.constraints.Pattern(regexp = "^[A-Za-z0-9._%+-]+@campus\\.edu$", message = "Only @campus.edu email addresses are allowed")
     private String email;
 
     @NotBlank(message = "Password is required")

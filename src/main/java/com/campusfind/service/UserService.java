@@ -9,6 +9,8 @@ import com.campusfind.entity.enums.ReportType;
 import com.campusfind.entity.enums.Role;
 import com.campusfind.repository.ReportRepository;
 import com.campusfind.repository.UserRepository;
+import com.campusfind.repository.ClaimRepository;
+import com.campusfind.repository.MatchRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +27,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ClaimRepository claimRepository;
+    private final MatchRepository matchRepository;
 
-    public UserService(UserRepository userRepository, ReportRepository reportRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, ReportRepository reportRepository, PasswordEncoder passwordEncoder,
+                       ClaimRepository claimRepository, MatchRepository matchRepository) {
         this.userRepository = userRepository;
         this.reportRepository = reportRepository;
         this.passwordEncoder = passwordEncoder;
+        this.claimRepository = claimRepository;
+        this.matchRepository = matchRepository;
     }
 
     @Transactional
@@ -61,6 +68,21 @@ public class UserService {
 
     public long countUsers() {
         return userRepository.count();
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        // Remove relationships that block report deletion due to foreign key constraints
+        List<Report> userReports = reportRepository.findByUserOrderByCreatedAtDesc(user);
+        for (Report report : userReports) {
+            claimRepository.deleteByReport(report);
+            matchRepository.deleteByLostReportOrFoundReport(report, report);
+        }
+        
+        // Delete user (JPA will cascade to Reports, Claims made by claimant, and Notifications)
+        userRepository.delete(user);
     }
 
     public List<LeaderboardDto> getTopFindersLeaderboard() {

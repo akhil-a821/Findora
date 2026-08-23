@@ -51,9 +51,9 @@ public class Match {
     }
 
     public String getMatchLabel() {
-        if (score >= 90) return "Excellent Match";
-        if (score >= 75) return "Strong Match";
-        if (score >= 60) return "Possible Match";
+        if (score >= 80) return "Strong Match";
+        if (score >= 65) return "Moderate Match";
+        if (score >= 50) return "Possible Match";
         return "Low Match";
     }
 

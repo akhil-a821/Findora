@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
 <head>
-    <title>Notifications — CampusFind</title>
+    <title>Notifications — Findora</title>
 </head>
 <body>
 <div th:fragment="content" class="py-4">
@@ -17,9 +17,9 @@
             </form>
         </div>
 
-        <div th:if="${#lists.isEmpty(notifications)}" class="empty-state">
-            <div class="empty-state-icon"><i class="fa-regular fa-bell-slash"></i></div>
-            <h5 class="fw-bold">No notifications yet</h5>
+        <div th:if="${#lists.isEmpty(notifications)}" class="empty-state bg-white border rounded-4 p-5 text-center shadow-sm">
+            <div class="empty-state-icon text-primary mb-3"><i class="fa-regular fa-bell-slash fa-3x"></i></div>
+            <h5 class="fw-bold mb-1">No notifications yet</h5>
             <p class="text-muted small mb-0">You're all caught up! New alerts will appear here when match or claim activities occur.</p>
         </div>
 

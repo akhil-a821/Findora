@@ -15,7 +15,7 @@
 
         <!-- Search & Filters Bar -->
         <div class="card card-custom p-4 border-0 mb-4 shadow-sm">
-            <form th:action="@{/browse}" method="get" class="row g-3">
+            <form th:action="@{/browse}" method="get" class="row g-3 align-items-center">
                 
                 <div class="col-md-4">
                     <div class="input-group">
@@ -41,6 +41,7 @@
                         <option value="ID Card" th:selected="${selectedCategory == 'ID Card'}">ID Card</option>
                         <option value="Documents" th:selected="${selectedCategory == 'Documents'}">Documents</option>
                         <option value="Books" th:selected="${selectedCategory == 'Books'}">Books</option>
+                        <option value="Clothing" th:selected="${selectedCategory == 'Clothing'}">Clothing</option>
                         <option value="Bags" th:selected="${selectedCategory == 'Bags'}">Bags</option>
                         <option value="Other" th:selected="${selectedCategory == 'Other'}">Other</option>
                     </select>
@@ -53,32 +54,48 @@
                         <option value="Canteen" th:selected="${selectedLocation == 'Canteen'}">Canteen</option>
                         <option value="Computer Lab" th:selected="${selectedLocation == 'Computer Lab'}">Computer Lab</option>
                         <option value="Main Gate" th:selected="${selectedLocation == 'Main Gate'}">Main Gate</option>
+                        <option value="Classroom" th:selected="${selectedLocation == 'Classroom'}">Classroom</option>
                         <option value="Auditorium" th:selected="${selectedLocation == 'Auditorium'}">Auditorium</option>
                         <option value="Playground" th:selected="${selectedLocation == 'Playground'}">Playground</option>
+                        <option value="Hostel" th:selected="${selectedLocation == 'Hostel'}">Hostel</option>
                     </select>
                 </div>
 
                 <div class="col-6 col-md-1 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary-custom w-100"><i class="fa-solid fa-filter"></i></button>
+                    <button type="submit" class="btn btn-primary-custom w-100" title="Apply Filters"><i class="fa-solid fa-filter"></i></button>
                     <a th:href="@{/browse}" class="btn btn-outline-secondary" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i></a>
                 </div>
             </form>
         </div>
 
+        <!-- Result Count & Quick Stats Bar -->
+        <div class="d-flex justify-content-between align-items-center mb-3" th:if="${!#lists.isEmpty(reports)}">
+            <div class="text-muted small">
+                Showing <strong class="text-dark" th:text="${totalCount}">0</strong> items
+                <span th:if="${selectedType != null and selectedType != 'ALL'}" class="badge bg-primary-subtle text-primary ms-1" th:text="${selectedType}">LOST</span>
+                <span th:if="${selectedCategory != null and selectedCategory != 'ALL'}" class="badge bg-secondary-subtle text-secondary ms-1" th:text="${selectedCategory}">Electronics</span>
+                <span th:if="${searchQuery != null and !searchQuery.isBlank()}" class="badge bg-light text-dark border ms-1" th:text="${'Query: ' + searchQuery}">Query</span>
+            </div>
+            <a th:href="@{/report}" class="btn btn-primary-custom btn-sm"><i class="fa-solid fa-plus me-1"></i> Post New Report</a>
+        </div>
+
         <!-- Empty State -->
-        <div th:if="${#lists.isEmpty(reports)}" class="empty-state">
-            <div class="empty-state-icon"><i class="fa-solid fa-box-open"></i></div>
+        <div th:if="${#lists.isEmpty(reports)}" class="empty-state bg-white border rounded-4 p-5 text-center shadow-sm my-4">
+            <div class="empty-state-icon text-primary mb-3"><i class="fa-solid fa-box-open fa-3x"></i></div>
             <h4 class="fw-bold mb-2">No reports found</h4>
-            <p class="text-muted mb-4">No lost or found items match your current search and filter selection.</p>
-            <a th:href="@{/report}" class="btn btn-primary-custom"><i class="fa-solid fa-plus me-1"></i> Submit New Report</a>
+            <p class="text-muted mb-4" style="max-width: 480px; margin: 0 auto;">No lost or found items match your current search and filter selection. Try adjusting your search query or reset the filters.</p>
+            <div class="d-flex justify-content-center gap-2">
+                <a th:href="@{/browse}" class="btn btn-outline-custom"><i class="fa-solid fa-rotate-left me-1"></i> Reset Filters</a>
+                <a th:href="@{/report}" class="btn btn-primary-custom"><i class="fa-solid fa-plus me-1"></i> Submit New Report</a>
+            </div>
         </div>
 
         <!-- Items Grid -->
         <div class="row g-4" th:if="${!#lists.isEmpty(reports)}">
             <div th:each="r : ${reports}" class="col-md-6 col-lg-4">
-                <div class="card card-custom h-100">
-                    <div class="card-img-wrapper">
-                        <img th:src="${r.imageUrl != null ? r.imageUrl : '/images/placeholder-default.svg'}" th:alt="${r.itemName}" alt="Item image">
+                <div class="card card-custom h-100 shadow-sm border-0">
+                    <div class="card-img-wrapper position-relative">
+                        <img th:src="${r.imageUrl != null ? r.imageUrl : '/images/placeholder-default.svg'}" th:alt="${r.itemName}" class="card-img-top object-fit-cover" style="height: 200px;">
                         <div class="position-absolute top-0 start-0 p-3">
                             <span class="badge badge-custom" th:classappend="${r.type.name() == 'LOST' ? 'badge-lost' : 'badge-found'}">
                                 <i th:classappend="${r.type.name() == 'LOST' ? 'fa-circle-exclamation' : 'fa-circle-check'}" class="fa-solid me-1"></i>
@@ -86,7 +103,9 @@
                             </span>
                         </div>
                         <div class="position-absolute top-0 end-0 p-3">
-                            <span class="badge bg-dark bg-opacity-75 text-white" th:text="${r.status.name()}">ACTIVE</span>
+                            <span class="badge" 
+                                  th:classappend="${r.status.name() == 'ACTIVE' ? 'bg-primary' : (r.status.name() == 'MATCHED' ? 'bg-warning text-dark' : (r.status.name() == 'RETURNED' ? 'bg-success' : 'bg-dark'))}"
+                                  th:text="${r.status.name()}">ACTIVE</span>
                         </div>
                     </div>
 

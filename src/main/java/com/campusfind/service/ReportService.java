@@ -74,6 +74,21 @@ public class ReportService {
     }
 
     private String saveUploadedFile(MultipartFile file) throws IOException {
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new IllegalArgumentException("Image file size exceeds maximum limit of 10MB.");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType != null && !contentType.equalsIgnoreCase("application/octet-stream")) {
+            String lowerType = contentType.toLowerCase();
+            if (!lowerType.startsWith("image/") || 
+                (!lowerType.equals("image/jpeg") && !lowerType.equals("image/jpg") && 
+                 !lowerType.equals("image/png") && !lowerType.equals("image/webp") && 
+                 !lowerType.equals("image/gif"))) {
+                throw new IllegalArgumentException("Invalid file format. Only JPEG, PNG, WEBP, and GIF images are allowed.");
+            }
+        }
+
         if (firebaseStorageService.isFirebaseEnabled()) {
             try {
                 return firebaseStorageService.uploadFile(file);
@@ -91,7 +106,7 @@ public class ReportService {
 
         // Validate image file extension
         if (!fileExtension.matches("\\.(jpg|jpeg|png|gif|webp)")) {
-            throw new IllegalArgumentException("Only image files (JPG, PNG, GIF, WEBP) are allowed.");
+            throw new IllegalArgumentException("Only image files (.jpg, .jpeg, .png, .gif, .webp) are allowed.");
         }
 
         String newFileName = UUID.randomUUID().toString() + fileExtension;
@@ -125,6 +140,11 @@ public class ReportService {
 
     public List<Report> getAllReports() {
         return reportRepository.findAll();
+    }
+
+    public List<Report> getRecentActiveReports(int limit) {
+        return reportRepository.findByStatusOrderByCreatedAtDesc(ReportStatus.ACTIVE)
+                .stream().limit(limit).toList();
     }
 
     public List<Report> getUserReports(User user) {

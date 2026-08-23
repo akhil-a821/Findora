@@ -81,7 +81,7 @@
                         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-2">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="match-score-badge text-white" 
-                                      th:classappend="${m.score >= 90 ? 'score-excellent' : (m.score >= 75 ? 'score-strong' : 'score-possible')}"
+                                      th:classappend="${m.score >= 80 ? 'score-strong' : (m.score >= 65 ? 'score-strong' : 'score-possible')}"
                                       th:text="${m.score + '% Match'}">
                                       87% Match
                                 </span>

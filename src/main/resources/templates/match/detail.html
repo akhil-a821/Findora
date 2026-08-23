@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
 <head>
-    <title>Potential Match Details — CampusFind</title>
+    <title>Potential Match Details — Findora</title>
 </head>
 <body>
 <div th:fragment="content" class="py-5">
@@ -10,13 +10,26 @@
         <!-- Match Score Header -->
         <div class="text-center mb-5">
             <div class="d-inline-block mb-3">
-                <span class="match-score-badge fs-4 px-4 py-2 text-white" 
-                      th:classappend="${match.score >= 90 ? 'score-excellent' : (match.score >= 75 ? 'score-strong' : 'score-possible')}">
+                <span class="match-score-badge fs-4 px-4 py-2 text-white shadow-sm" 
+                      th:classappend="${match.score >= 80 ? 'score-strong' : (match.score >= 65 ? 'score-strong' : 'score-possible')}">
                     <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
-                    <span th:text="${match.score + '% Potential Match'}">87% Potential Match</span>
+                    <span th:text="${match.score + '/100 — ' + match.matchLabel}">87/100 — Strong Match</span>
                 </span>
             </div>
-            <p class="text-muted">Our smart matching engine identified a high similarity between these two reports.</p>
+            
+            <!-- Visual Confidence Bar -->
+            <div class="progress mx-auto mb-3" style="height: 10px; max-width: 360px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                     th:classappend="${match.score >= 80 ? 'bg-success' : (match.score >= 65 ? 'bg-primary' : 'bg-warning')}"
+                     role="progressbar" 
+                     th:style="${'width: ' + match.score + '%'}" 
+                     th:aria-valuenow="${match.score}" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                </div>
+            </div>
+
+            <p class="text-muted">Our smart matching engine identified the following scoring factors between these two reports.</p>
         </div>
 
         <!-- Side-by-Side Comparison Cards -->
@@ -24,14 +37,14 @@
             
             <!-- LOST ITEM CARD -->
             <div class="col-md-6">
-                <div class="card card-custom h-100 p-4 border-danger border-2">
+                <div class="card card-custom h-100 p-4 border-danger border-2 shadow-sm">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="badge badge-custom badge-lost fs-6"><i class="fa-solid fa-circle-exclamation me-1"></i> LOST ITEM</span>
                         <span class="text-muted small" th:text="${#temporals.format(lostReport.createdAt, 'MMM dd, yyyy')}">Date</span>
                     </div>
 
                     <div class="rounded-3 overflow-hidden mb-3 bg-light" style="max-height: 200px;">
-                        <img th:src="${lostReport.imageUrl != null ? lostReport.imageUrl : '/images/placeholder-default.svg'}" th:alt="${lostReport.itemName}" class="img-fluid w-100 object-fit-cover">
+                        <img th:src="${lostReport.imageUrl != null ? lostReport.imageUrl : '/images/placeholder-default.svg'}" th:alt="${lostReport.itemName}" class="img-fluid w-100 object-fit-cover" style="height: 180px;">
                     </div>
 
                     <h4 class="fw-bold mb-2 text-dark" th:text="${lostReport.itemName}">AirPods Pro</h4>
@@ -42,22 +55,26 @@
                             <div class="col-6"><strong>Category:</strong> <span th:text="${lostReport.category}">Electronics</span></div>
                             <div class="col-6"><strong>Location:</strong> <span th:text="${lostReport.location}">Library</span></div>
                             <div class="col-6"><strong>Date Lost:</strong> <span th:text="${#temporals.format(lostReport.date, 'MMM dd, yyyy')}">Jul 30</span></div>
-                            <div class="col-6"><strong>Color:</strong> <span th:text="${lostReport.color != null ? lostReport.color : 'N/A'}">White</span></div>
+                            <div class="col-6"><strong>Color:</strong> <span th:text="${lostReport.color != null and !lostReport.color.isBlank() ? lostReport.color : 'N/A'}">White</span></div>
                         </div>
+                    </div>
+
+                    <div class="mt-3 text-end">
+                        <a th:href="@{'/item/' + ${lostReport.id}}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> View Lost Report</a>
                     </div>
                 </div>
             </div>
 
             <!-- FOUND ITEM CARD -->
             <div class="col-md-6">
-                <div class="card card-custom h-100 p-4 border-success border-2">
+                <div class="card card-custom h-100 p-4 border-success border-2 shadow-sm">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="badge badge-custom badge-found fs-6"><i class="fa-solid fa-circle-check me-1"></i> FOUND ITEM</span>
                         <span class="text-muted small" th:text="${#temporals.format(foundReport.createdAt, 'MMM dd, yyyy')}">Date</span>
                     </div>
 
                     <div class="rounded-3 overflow-hidden mb-3 bg-light" style="max-height: 200px;">
-                        <img th:src="${foundReport.imageUrl != null ? foundReport.imageUrl : '/images/placeholder-default.svg'}" th:alt="${foundReport.itemName}" class="img-fluid w-100 object-fit-cover">
+                        <img th:src="${foundReport.imageUrl != null ? foundReport.imageUrl : '/images/placeholder-default.svg'}" th:alt="${foundReport.itemName}" class="img-fluid w-100 object-fit-cover" style="height: 180px;">
                     </div>
 
                     <h4 class="fw-bold mb-2 text-dark" th:text="${foundReport.itemName}">Wireless Earbuds</h4>
@@ -68,25 +85,36 @@
                             <div class="col-6"><strong>Category:</strong> <span th:text="${foundReport.category}">Electronics</span></div>
                             <div class="col-6"><strong>Location:</strong> <span th:text="${foundReport.location}">Library</span></div>
                             <div class="col-6"><strong>Date Found:</strong> <span th:text="${#temporals.format(foundReport.date, 'MMM dd, yyyy')}">Jul 30</span></div>
-                            <div class="col-6"><strong>Color:</strong> <span th:text="${foundReport.color != null ? foundReport.color : 'N/A'}">White</span></div>
+                            <div class="col-6"><strong>Color:</strong> <span th:text="${foundReport.color != null and !foundReport.color.isBlank() ? foundReport.color : 'N/A'}">White</span></div>
                         </div>
+                    </div>
+
+                    <div class="mt-3 text-end">
+                        <a th:href="@{'/item/' + ${foundReport.id}}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> View Found Report</a>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- Why This May Be a Match Breakdown Box -->
+        <!-- Why This Is a Match Breakdown Box -->
         <div class="card card-custom p-4 p-md-5 border-0 shadow-sm mb-5">
-            <h4 class="fw-bold mb-3"><i class="fa-solid fa-list-check text-primary me-2"></i> Why this may be a match</h4>
-            <ul class="list-group list-group-flush mb-4">
-                <li th:each="factor : ${match.matchingFactors}" class="list-group-item px-0 py-2 border-0 fs-6">
-                    <span class="text-success fw-bold me-2" th:text="${factor}">✓ Matching category</span>
-                </li>
-            </ul>
+            <h4 class="fw-bold mb-3"><i class="fa-solid fa-list-check text-primary me-2"></i> Scoring Factors Breakdown</h4>
+            
+            <div class="list-group list-group-flush mb-4">
+                <div th:each="factor : ${match.matchingFactors}" class="list-group-item px-0 py-3 border-bottom d-flex align-items-center">
+                    <i class="fa-solid fa-circle-check text-success fa-lg me-3"></i>
+                    <span class="fs-6 fw-semibold text-dark" th:text="${factor}">✓ Category match: Electronics (+20 pts)</span>
+                </div>
+            </div>
 
             <div class="pt-3 border-top d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-                <a th:href="@{'/item/' + ${foundReport.id}}" class="btn btn-primary-custom btn-lg"><i class="fa-solid fa-hand-holding-heart me-2"></i> Submit Claim for Found Item</a>
+                <div th:if="${canClaim}">
+                    <a th:href="@{'/item/' + ${foundReport.id}}" class="btn btn-primary-custom btn-lg"><i class="fa-solid fa-hand-holding-heart me-2"></i> Submit Verification Claim</a>
+                </div>
+                <div th:if="${!canClaim}" class="text-muted small">
+                    <i class="fa-solid fa-info-circle me-1"></i> You are viewing your found item match.
+                </div>
                 <a th:href="@{/dashboard}" class="btn btn-outline-custom">Back to Dashboard</a>
             </div>
         </div>

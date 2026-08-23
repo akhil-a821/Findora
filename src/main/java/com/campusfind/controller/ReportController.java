@@ -25,11 +25,13 @@ public class ReportController {
     private final ReportService reportService;
     private final UserService userService;
     private final MatchingService matchingService;
+    private final com.campusfind.service.ClaimService claimService;
 
-    public ReportController(ReportService reportService, UserService userService, MatchingService matchingService) {
+    public ReportController(ReportService reportService, UserService userService, MatchingService matchingService, com.campusfind.service.ClaimService claimService) {
         this.reportService = reportService;
         this.userService = userService;
         this.matchingService = matchingService;
+        this.claimService = claimService;
     }
 
     @GetMapping("/report")
@@ -56,7 +58,7 @@ public class ReportController {
         try {
             User user = userService.findByEmail(authentication.getName()).orElseThrow();
             Report createdReport = reportService.createReport(dto, user);
-            redirectAttributes.addFlashAttribute("successMessage", "Report submitted successfully 🎉");
+            redirectAttributes.addFlashAttribute("successMessage", "Report submitted successfully 🎉 Smart Matching engine is scanning for matches!");
             return "redirect:/item/" + createdReport.getId();
         } catch (IOException | IllegalArgumentException e) {
             bindingResult.rejectValue("imageFile", "error.reportRequestDto", e.getMessage());
@@ -82,6 +84,7 @@ public class ReportController {
         List<Report> reports = reportService.searchAndFilterReports(reportType, category, location, query);
 
         model.addAttribute("reports", reports);
+        model.addAttribute("totalCount", reports.size());
         model.addAttribute("selectedType", type != null ? type : "ALL");
         model.addAttribute("selectedCategory", category != null ? category : "ALL");
         model.addAttribute("selectedLocation", location != null ? location : "ALL");
@@ -96,16 +99,21 @@ public class ReportController {
         List<Match> matches = matchingService.getMatchesByReportId(id);
 
         boolean isOwner = false;
+        boolean hasClaimed = false;
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
             User currentUser = userService.findByEmail(authentication.getName()).orElse(null);
-            if (currentUser != null && report.getUser().getId().equals(currentUser.getId())) {
-                isOwner = true;
+            if (currentUser != null) {
+                if (report.getUser().getId().equals(currentUser.getId())) {
+                    isOwner = true;
+                }
+                hasClaimed = claimService.hasUserClaimedReport(report, currentUser);
             }
         }
 
         model.addAttribute("report", report);
         model.addAttribute("matches", matches);
         model.addAttribute("isOwner", isOwner);
+        model.addAttribute("hasClaimed", hasClaimed);
 
         return "report/detail";
     }

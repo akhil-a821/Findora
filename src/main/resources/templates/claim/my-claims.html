@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
 <head>
-    <title>My Claims — CampusFind</title>
+    <title>My Claims — Findora</title>
 </head>
 <body>
 <div th:fragment="content" class="py-4">
     <div class="container">
         
         <div class="mb-4">
-            <h2 class="fw-bold mb-1">Item Claims</h2>
-            <p class="text-muted mb-0">Track claims you've submitted or review claims on items you found.</p>
+            <h2 class="fw-bold mb-1">Item Claims Management</h2>
+            <p class="text-muted mb-0">Track verification claims you've submitted or review ownership claims for items you found.</p>
         </div>
 
         <!-- Claims Tabs -->
@@ -30,10 +30,10 @@
             
             <!-- Tab 1: Claims Received on Found Items -->
             <div class="tab-pane fade show active" id="received" role="tabpanel">
-                <div th:if="${#lists.isEmpty(receivedClaims)}" class="empty-state">
-                    <div class="empty-state-icon"><i class="fa-solid fa-inbox"></i></div>
-                    <h5 class="fw-bold">No claims received yet</h5>
-                    <p class="text-muted small mb-0">When someone submits a claim for an item you found, it will appear here for your review.</p>
+                <div th:if="${#lists.isEmpty(receivedClaims)}" class="empty-state bg-white border rounded-4 p-5 text-center shadow-sm">
+                    <div class="empty-state-icon text-primary mb-3"><i class="fa-solid fa-inbox fa-3x"></i></div>
+                    <h5 class="fw-bold mb-1">No claims received yet</h5>
+                    <p class="text-muted small mb-0">When someone submits a claim for an item you found on campus, it will appear here for your verification and review.</p>
                 </div>
 
                 <div th:each="c : ${receivedClaims}" class="card card-custom p-4 mb-3 border-0 shadow-sm">
@@ -65,21 +65,21 @@
                     <div class="d-flex flex-wrap gap-2 justify-content-end align-items-center pt-2">
                         <div th:if="${c.status.name() == 'PENDING'}" class="d-flex gap-2">
                             <form th:action="@{'/claims/approve/' + ${c.id}}" method="post">
-                                <button type="submit" class="btn btn-success font-weight-bold"><i class="fa-solid fa-check me-1"></i> Approve Claim</button>
+                                <button type="submit" class="btn btn-success fw-bold"><i class="fa-solid fa-check me-1"></i> Approve Claim</button>
                             </form>
                             <form th:action="@{'/claims/reject/' + ${c.id}}" method="post">
-                                <button type="submit" class="btn btn-outline-danger font-weight-bold"><i class="fa-solid fa-xmark me-1"></i> Reject Claim</button>
+                                <button type="submit" class="btn btn-outline-danger fw-bold"><i class="fa-solid fa-xmark me-1"></i> Reject Claim</button>
                             </form>
                         </div>
 
                         <div th:if="${c.status.name() == 'APPROVED' and c.report.status.name() != 'RETURNED'}">
-                            <form th:action="@{'/claims/return/' + ${c.report.id}}" method="post">
-                                <button type="submit" class="btn btn-primary-custom"><i class="fa-solid fa-heart-circle-check me-1"></i> Mark as Returned</button>
+                            <form th:action="@{'/claims/return/' + ${c.report.id}}" method="post" onsubmit="return confirm('Confirm that this item has been physically handed back to the verified owner?');">
+                                <button type="submit" class="btn btn-primary-custom"><i class="fa-solid fa-heart-circle-check me-1"></i> Handed Back &amp; Reunited</button>
                             </form>
                         </div>
 
                         <div th:if="${c.report.status.name() == 'RETURNED'}">
-                            <span class="badge bg-secondary-subtle text-secondary fs-6 p-2"><i class="fa-solid fa-heart text-danger me-1"></i> Item Returned to Owner</span>
+                            <span class="badge bg-success-subtle text-success fs-6 p-2"><i class="fa-solid fa-heart text-danger me-1"></i> Item Returned to Owner</span>
                         </div>
                     </div>
                 </div>
@@ -87,10 +87,10 @@
 
             <!-- Tab 2: Claims Submitted by User -->
             <div class="tab-pane fade" id="submitted" role="tabpanel">
-                <div th:if="${#lists.isEmpty(submittedClaims)}" class="empty-state">
-                    <div class="empty-state-icon"><i class="fa-solid fa-paper-plane"></i></div>
-                    <h5 class="fw-bold">No claims submitted yet</h5>
-                    <p class="text-muted small mb-0">When you claim a found item, your submission status will be tracked here.</p>
+                <div th:if="${#lists.isEmpty(submittedClaims)}" class="empty-state bg-white border rounded-4 p-5 text-center shadow-sm">
+                    <div class="empty-state-icon text-primary mb-3"><i class="fa-solid fa-paper-plane fa-3x"></i></div>
+                    <h5 class="fw-bold mb-1">No claims submitted yet</h5>
+                    <p class="text-muted small mb-0">When you claim a found item from the Browse or Match page, your verification submission status will be tracked here.</p>
                 </div>
 
                 <div th:each="c : ${submittedClaims}" class="card card-custom p-4 mb-3 border-0 shadow-sm">

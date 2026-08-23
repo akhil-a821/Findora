@@ -31,3 +31,9 @@ data/
 *.trace.db
 serviceAccountKey.json
 
+### Presentation Files ###
+*.pptx
+presentation.html
+CAMPUSFIND_SLIDES.md
+FINDORA_SLIDES.md
+PRESENTATION_GUIDE.md

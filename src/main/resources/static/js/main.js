@@ -1,9 +1,4 @@
-// 0. Dark Mode Theme System with localStorage Persistence & Bootstrap 5 Compatibility
-(function() {
-    const savedTheme = localStorage.getItem('findoraTheme') || 'light';
-    document.documentElement.setAttribute('data-bs-theme', savedTheme);
-    document.documentElement.setAttribute('data-theme', savedTheme);
-})();
+// Theme initialization moved to <head> in base.html to prevent white flash
 
 // Preloader Auto-Dismissal (Only runs on initial site opening, skipped during page navigation)
 (function() {
@@ -118,9 +113,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // 4. Form Double-Submission Prevention & Loading Feedback
+    const allForms = document.querySelectorAll('form');
+    allForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn && !submitBtn.disabled) {
+                // Don't disable if form is invalid (HTML5 validation will handle)
+                if (form.checkValidity && !form.checkValidity()) {
+                    return;
+                }
+                setTimeout(() => {
+                    submitBtn.disabled = true;
+                    const originalHtml = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...';
+                }, 10);
+            }
+        });
+    });
 });
 
-// 4. AJAX Mark Notification as Read
+// 5. AJAX Mark Notification as Read
 function markNotificationAsRead(id, element) {
     fetch('/notifications/read/' + id, {
         method: 'POST',

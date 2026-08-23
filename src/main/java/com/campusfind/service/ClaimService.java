@@ -127,7 +127,7 @@ public class ClaimService {
                 notificationService.createNotification(
                         c.getClaimant(),
                         "Item Returned ❤️",
-                        "The item '" + report.getItemName() + "' has been marked as RETURNED. Thank you for using CampusFind!",
+                        "The item '" + report.getItemName() + "' has been marked as RETURNED. Thank you for using Findora!",
                         NotificationType.ITEM_RETURNED,
                         "/dashboard"
                 );
@@ -143,6 +143,11 @@ public class ClaimService {
         );
 
         return updated;
+    }
+
+    public boolean hasUserClaimedReport(Report report, User claimant) {
+        if (report == null || claimant == null) return false;
+        return claimRepository.existsByReportAndClaimant(report, claimant);
     }
 
     public List<Claim> getUserSubmittedClaims(User claimant) {

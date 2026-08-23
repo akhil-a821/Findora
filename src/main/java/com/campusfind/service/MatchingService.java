@@ -50,36 +50,36 @@ public class MatchingService {
 
             MatchCalculation calc = calculateMatchScore(lostReport, foundReport);
 
-            if (calc.getScore() >= 60) {
+            if (calc.getScore() >= 50) {
                 Optional<Match> existingOpt = matchRepository.findByLostReportAndFoundReport(lostReport, foundReport);
                 Match match;
                 if (existingOpt.isPresent()) {
                     match = existingOpt.get();
                     match.setScore(calc.getScore());
                     match.setMatchingFactors(calc.getFactors());
+                    match = matchRepository.save(match);
                 } else {
                     match = new Match(lostReport, foundReport, calc.getScore(), calc.getFactors());
-                    
-                    // Send notifications to both users
+                    match = matchRepository.save(match);
+
+                    // Send notifications with direct link to the match breakdown
                     notificationService.createNotification(
                             lostReport.getUser(),
-                            "Potential Match Found (" + calc.getScore() + "%)",
+                            "Potential Match Found (" + calc.getScore() + "% Match)",
                             "A found item '" + foundReport.getItemName() + "' matches your lost report '" + lostReport.getItemName() + "'.",
                             NotificationType.MATCH_FOUND,
-                            "/matches/"
+                            "/matches/" + match.getId()
                     );
 
                     notificationService.createNotification(
                             foundReport.getUser(),
-                            "Potential Match Found (" + calc.getScore() + "%)",
+                            "Potential Match Found (" + calc.getScore() + "% Match)",
                             "Your found report '" + foundReport.getItemName() + "' matches a lost report for '" + lostReport.getItemName() + "'.",
                             NotificationType.MATCH_FOUND,
-                            "/matches/"
+                            "/matches/" + match.getId()
                     );
                 }
-                matchRepository.save(match);
-                
-                // Update link in notification if targetUrl was set
+
                 generatedMatches.add(match);
             }
         }
@@ -94,16 +94,19 @@ public class MatchingService {
         // 1. Category match (20 pts)
         if (lost.getCategory() != null && lost.getCategory().equalsIgnoreCase(found.getCategory())) {
             score += 20;
-            factors.add("✓ Same category (" + lost.getCategory() + ")");
+            factors.add("✓ Category match: " + lost.getCategory() + " (+20 pts)");
         }
 
         // 2. Location match (25 pts)
         if (lost.getLocation() != null && found.getLocation() != null) {
             String locLost = lost.getLocation().toLowerCase().trim();
             String locFound = found.getLocation().toLowerCase().trim();
-            if (locLost.equals(locFound) || locLost.contains(locFound) || locFound.contains(locLost)) {
+            if (locLost.equals(locFound)) {
                 score += 25;
-                factors.add("✓ Matching location (" + lost.getLocation() + ")");
+                factors.add("✓ Exact location match: " + lost.getLocation() + " (+25 pts)");
+            } else if (locLost.contains(locFound) || locFound.contains(locLost)) {
+                score += 20;
+                factors.add("✓ Proximity location match: " + lost.getLocation() + " (+20 pts)");
             }
         }
 
@@ -112,13 +115,16 @@ public class MatchingService {
             long daysDiff = Math.abs(ChronoUnit.DAYS.between(lost.getDate(), found.getDate()));
             if (daysDiff == 0) {
                 score += 20;
-                factors.add("✓ Same day");
+                factors.add("✓ Date proximity: Same day (+20 pts)");
             } else if (daysDiff == 1) {
                 score += 15;
-                factors.add("✓ 1 day difference");
+                factors.add("✓ Date proximity: 1 day difference (+15 pts)");
             } else if (daysDiff <= 3) {
                 score += 10;
-                factors.add("✓ Close date proximity (" + daysDiff + " days)");
+                factors.add("✓ Date proximity: " + daysDiff + " days difference (+10 pts)");
+            } else if (daysDiff <= 7) {
+                score += 5;
+                factors.add("✓ Date proximity: " + daysDiff + " days difference (+5 pts)");
             }
         }
 
@@ -129,7 +135,7 @@ public class MatchingService {
             String brandFound = found.getBrand().toLowerCase().trim();
             if (brandLost.equals(brandFound) || brandLost.contains(brandFound) || brandFound.contains(brandLost)) {
                 score += 10;
-                factors.add("✓ Matching brand (" + lost.getBrand() + ")");
+                factors.add("✓ Matching brand: " + lost.getBrand() + " (+10 pts)");
             }
         }
 
@@ -140,17 +146,17 @@ public class MatchingService {
             String colorFound = found.getColor().toLowerCase().trim();
             if (colorLost.equals(colorFound) || colorLost.contains(colorFound) || colorFound.contains(colorLost)) {
                 score += 10;
-                factors.add("✓ Matching color (" + lost.getColor() + ")");
+                factors.add("✓ Matching color: " + lost.getColor() + " (+10 pts)");
             }
         }
 
         // 6. Item name similarity (10 pts)
         if (lost.getItemName() != null && found.getItemName() != null) {
             double nameSim = calculateSimilarity(lost.getItemName(), found.getItemName());
-            if (nameSim >= 0.5) {
-                int pts = (int) Math.round(nameSim * 10);
+            if (nameSim >= 0.4) {
+                int pts = Math.max(2, (int) Math.round(nameSim * 10));
                 score += pts;
-                factors.add("✓ Similar item title");
+                factors.add("✓ Title similarity (" + Math.round(nameSim * 100) + "%) (+" + pts + " pts)");
             }
         }
 
@@ -161,7 +167,7 @@ public class MatchingService {
             lostWords.retainAll(foundWords);
             if (!lostWords.isEmpty()) {
                 score += 5;
-                factors.add("✓ Similar description keywords (" + String.join(", ", lostWords.stream().limit(3).collect(Collectors.toList())) + ")");
+                factors.add("✓ Keyword overlap: " + String.join(", ", lostWords.stream().limit(3).collect(Collectors.toList())) + " (+5 pts)");
             }
         }
 
@@ -205,7 +211,7 @@ public class MatchingService {
     }
 
     public long countMatches() {
-        return matchRepository.countByScoreGreaterThanEqual(60);
+        return matchRepository.countByScoreGreaterThanEqual(50);
     }
 
     public static class MatchCalculation {

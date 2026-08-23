@@ -1219,3 +1219,96 @@ footer {
     font-size: 1.25rem;
   }
 }
+
+/* Dark Mode Image & Placeholder Adjustments */
+[data-bs-theme="dark"] .card-img-wrapper,
+[data-theme="dark"] .card-img-wrapper {
+  background: rgba(15, 23, 42, 0.8) !important;
+}
+
+[data-bs-theme="dark"] img[src*="placeholder"],
+[data-theme="dark"] img[src*="placeholder"] {
+  filter: invert(0.85) hue-rotate(180deg) brightness(1.2);
+  opacity: 0.8;
+}
+
+/* Sleek Minimalist Login & Register */
+.sleek-card {
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02) !important;
+  animation: fadeUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  background-color: #ffffff;
+}
+[data-bs-theme="dark"] .sleek-card,
+[data-theme="dark"] .sleek-card {
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  background-color: #121826 !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+}
+
+.sleek-input {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.sleek-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+[data-bs-theme="dark"] .sleek-input,
+[data-theme="dark"] .sleek-input {
+  border: 1px solid rgba(255,255,255,0.12);
+  background-color: #1a2235 !important;
+  color: #f8fafc;
+}
+[data-bs-theme="dark"] .sleek-input:focus,
+[data-theme="dark"] .sleek-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+}
+
+.sleek-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  margin: 0 auto;
+}
+[data-bs-theme="dark"] .sleek-icon-wrapper,
+[data-theme="dark"] .sleek-icon-wrapper {
+  background-color: rgba(255,255,255,0.05);
+  color: #ffffff;
+}
+
+.btn-sleek-primary {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 500;
+  border: none;
+  transition: opacity 0.2s;
+}
+.btn-sleek-primary:hover {
+  opacity: 0.85;
+  color: #ffffff;
+}
+[data-bs-theme="dark"] .btn-sleek-primary,
+[data-theme="dark"] .btn-sleek-primary {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+[data-bs-theme="dark"] .btn-sleek-primary:hover,
+[data-theme="dark"] .btn-sleek-primary:hover {
+  opacity: 0.85;
+  color: #0f172a;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
