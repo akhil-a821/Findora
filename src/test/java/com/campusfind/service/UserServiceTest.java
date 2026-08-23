@@ -9,6 +9,8 @@ import com.campusfind.entity.enums.ReportType;
 import com.campusfind.entity.enums.Role;
 import com.campusfind.repository.ReportRepository;
 import com.campusfind.repository.UserRepository;
+import com.campusfind.repository.ClaimRepository;
+import com.campusfind.repository.MatchRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,11 +37,17 @@ class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ClaimRepository claimRepository;
+
+    @Mock
+    private MatchRepository matchRepository;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, reportRepository, passwordEncoder);
+        userService = new UserService(userRepository, reportRepository, passwordEncoder, claimRepository, matchRepository);
     }
 
     @Test
