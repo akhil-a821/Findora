@@ -16,7 +16,10 @@ window.addEventListener('load', () => {
             sessionStorage.setItem('findoraVisited', 'true');
             setTimeout(() => {
                 preloader.classList.add('preloader-hidden');
-            }, 2000);
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }, 1200);
         }
     }
 });
@@ -114,9 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Form Double-Submission Prevention & Loading Feedback
-    const allForms = document.querySelectorAll('form');
-    allForms.forEach(form => {
+    // 4. Form Double-Submission Prevention & Loading Feedback (Only for POST mutation forms, never for GET search/filter forms)
+    const postForms = document.querySelectorAll('form[method="post" i]');
+    postForms.forEach(form => {
         form.addEventListener('submit', function(e) {
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn && !submitBtn.disabled) {
@@ -126,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 setTimeout(() => {
                     submitBtn.disabled = true;
-                    const originalHtml = submitBtn.innerHTML;
                     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Processing...';
                 }, 10);
             }

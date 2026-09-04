@@ -15,29 +15,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
-    <!-- Prevent white flash in dark mode -->
+    <!-- Prevent white flash in dark mode & skip preloader if already visited -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('findoraTheme') || 'light';
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
             document.documentElement.setAttribute('data-theme', savedTheme);
+            if (sessionStorage.getItem('findoraVisited')) {
+                document.documentElement.classList.add('skip-preloader');
+            }
         })();
     </script>
 </head>
 <body>
-
-    <!-- Full-Screen Brand Preloader -->
-    <div id="appPreloader">
-        <div class="preloader-logo-ring">
-            <i class="fa-solid fa-compass fa-2xl"></i>
-        </div>
-        <div class="preloader-brand">
-            <i class="fa-solid fa-compass text-primary me-2"></i>Find<span>ora</span>
-        </div>
-        <div class="preloader-bar-container">
-            <div class="preloader-bar-fill"></div>
-        </div>
-    </div>
 
     <!-- Header Navigation -->
     <nav class="navbar navbar-expand-lg navbar-custom sticky-top">

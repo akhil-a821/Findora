@@ -6,6 +6,19 @@
 <body>
 <div th:fragment="content">
 
+    <!-- Full-Screen Brand Preloader (Only shown on initial open) -->
+    <div id="appPreloader">
+        <div class="preloader-logo-ring">
+            <i class="fa-solid fa-compass fa-2xl"></i>
+        </div>
+        <div class="preloader-brand">
+            <i class="fa-solid fa-compass text-primary me-2"></i>Find<span>ora</span>
+        </div>
+        <div class="preloader-bar-container">
+            <div class="preloader-bar-fill"></div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero-section text-center">
         <div class="container">
@@ -128,7 +141,7 @@
             <!-- Recent Reports Grid -->
             <div class="row g-4" th:if="${!#lists.isEmpty(recentReports)}">
                 <div th:each="r : ${recentReports}" class="col-md-6 col-lg-4">
-                    <div class="card card-custom h-100 shadow-sm border-0">
+                    <div class="card card-custom h-100 shadow-sm">
                         <div class="card-img-wrapper position-relative">
                             <img th:src="${r.imageUrl != null ? r.imageUrl : '/images/placeholder-default.svg'}" th:alt="${r.itemName}" class="card-img-top object-fit-cover" style="height: 200px;">
                             <div class="position-absolute top-0 start-0 p-3">

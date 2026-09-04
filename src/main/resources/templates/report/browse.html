@@ -14,17 +14,17 @@
         </div>
 
         <!-- Search & Filters Bar -->
-        <div class="card card-custom p-4 border-0 mb-4 shadow-sm">
-            <form th:action="@{/browse}" method="get" class="row g-3 align-items-center">
+        <div class="card card-custom p-4 mb-4 shadow-sm">
+            <form th:action="@{/browse}" method="get" class="row g-3 align-items-center" autocomplete="off">
                 
-                <div class="col-md-4">
+                <div class="col-lg-3 col-md-6">
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                        <input type="text" name="query" th:value="${searchQuery}" class="form-control bg-light border-start-0" placeholder="Search item name, brand, details...">
+                        <input type="text" name="query" th:value="${searchQuery}" class="form-control bg-light border-start-0" placeholder="Search item name, brand..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
                 </div>
 
-                <div class="col-6 col-md-2">
+                <div class="col-6 col-lg-2 col-md-3">
                     <select name="type" class="form-select bg-light">
                         <option value="ALL" th:selected="${selectedType == 'ALL'}">All Types</option>
                         <option value="LOST" th:selected="${selectedType == 'LOST'}">Lost Items</option>
@@ -32,7 +32,7 @@
                     </select>
                 </div>
 
-                <div class="col-6 col-md-3">
+                <div class="col-6 col-lg-2 col-md-3">
                     <select name="category" class="form-select bg-light">
                         <option value="ALL" th:selected="${selectedCategory == 'ALL'}">All Categories</option>
                         <option value="Electronics" th:selected="${selectedCategory == 'Electronics'}">Electronics</option>
@@ -47,7 +47,7 @@
                     </select>
                 </div>
 
-                <div class="col-6 col-md-2">
+                <div class="col-6 col-lg-3 col-md-6">
                     <select name="location" class="form-select bg-light">
                         <option value="ALL" th:selected="${selectedLocation == 'ALL'}">All Locations</option>
                         <option value="Library" th:selected="${selectedLocation == 'Library'}">Library</option>
@@ -61,9 +61,13 @@
                     </select>
                 </div>
 
-                <div class="col-6 col-md-1 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary-custom w-100" title="Apply Filters"><i class="fa-solid fa-filter"></i></button>
-                    <a th:href="@{/browse}" class="btn btn-outline-secondary" title="Reset Filters"><i class="fa-solid fa-rotate-left"></i></a>
+                <div class="col-6 col-lg-2 col-md-6 d-flex gap-2 align-items-center">
+                    <button type="submit" class="btn btn-primary-custom flex-grow-1 d-inline-flex align-items-center justify-content-center gap-2" style="height: 42px; padding: 0.5rem 1rem;" title="Apply Filters">
+                        <i class="fa-solid fa-filter"></i> <span>Filter</span>
+                    </button>
+                    <a th:href="@{/browse}" class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px; flex-shrink: 0; padding: 0;" title="Reset Filters">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </a>
                 </div>
             </form>
         </div>
@@ -93,7 +97,7 @@
         <!-- Items Grid -->
         <div class="row g-4" th:if="${!#lists.isEmpty(reports)}">
             <div th:each="r : ${reports}" class="col-md-6 col-lg-4">
-                <div class="card card-custom h-100 shadow-sm border-0">
+                <div class="card card-custom h-100 shadow-sm">
                     <div class="card-img-wrapper position-relative">
                         <img th:src="${r.imageUrl != null ? r.imageUrl : '/images/placeholder-default.svg'}" th:alt="${r.itemName}" class="card-img-top object-fit-cover" style="height: 200px;">
                         <div class="position-absolute top-0 start-0 p-3">
