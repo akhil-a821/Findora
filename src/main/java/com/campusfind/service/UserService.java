@@ -58,6 +58,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public void resetPassword(String email, String newPassword, String confirmPassword) {
+        if (newPassword == null || newPassword.trim().length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters long.");
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Passwords do not match.");
+        }
+        User user = userRepository.findByEmail(email.toLowerCase().trim())
+                .orElseThrow(() -> new IllegalArgumentException("No account registered with this email address."));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email.toLowerCase().trim());
     }

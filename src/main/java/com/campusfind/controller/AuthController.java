@@ -1,5 +1,6 @@
 package com.campusfind.controller;
 
+import com.campusfind.dto.PasswordResetDto;
 import com.campusfind.dto.UserRegistrationDto;
 import com.campusfind.service.UserService;
 import jakarta.validation.Valid;
@@ -23,6 +24,34 @@ public class AuthController {
     @GetMapping("/login")
     public String loginPage() {
         return "login";
+    }
+
+    @GetMapping("/forgot-password")
+    public String forgotPasswordPage(Model model) {
+        if (!model.containsAttribute("passwordResetDto")) {
+            model.addAttribute("passwordResetDto", new PasswordResetDto());
+        }
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String handlePasswordReset(
+            @Valid @ModelAttribute("passwordResetDto") PasswordResetDto dto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "forgot-password";
+        }
+
+        try {
+            userService.resetPassword(dto.getEmail(), dto.getNewPassword(), dto.getConfirmPassword());
+            redirectAttributes.addFlashAttribute("successMessage", "Password reset successfully! Please log in with your new password.");
+            return "redirect:/login";
+        } catch (IllegalArgumentException e) {
+            bindingResult.rejectValue("email", "error.passwordResetDto", e.getMessage());
+            return "forgot-password";
+        }
     }
 
     @GetMapping("/register")

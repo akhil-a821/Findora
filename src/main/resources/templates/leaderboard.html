@@ -22,16 +22,16 @@
             <!-- 2nd Place (Silver) -->
             <div class="col-md-4 col-lg-3 order-2 order-md-1" th:if="${secondPlace != null}">
                 <div class="card card-custom podium-card podium-silver text-center p-4 h-100 position-relative overflow-hidden">
-                    <div class="position-absolute top-0 end-0 p-2 text-secondary opacity-25">
-                        <i class="fa-solid fa-medal fa-4x"></i>
+                    <div class="podium-watermark text-secondary">
+                        <i class="fa-solid fa-medal"></i>
                     </div>
-                    <div class="d-inline-flex align-items-center justify-content-center bg-secondary text-white rounded-circle mx-auto mb-3 shadow" style="width: 64px; height: 64px; font-weight: 800; font-size: 1.5rem;">
+                    <div class="d-inline-flex align-items-center justify-content-center podium-rank-circle podium-rank-silver mx-auto mb-3 shadow">
                         2nd
                     </div>
                     <h5 class="fw-bold mb-1" th:text="${secondPlace.name}">Finder Name</h5>
-                    <span class="badge bg-secondary-subtle text-secondary mb-3 mx-auto px-3 py-1" th:text="${secondPlace.rankBadge}">🌟 Super Finder</span>
+                    <span class="badge badge-silver mb-3 mx-auto px-3 py-1 fw-semibold" th:text="${secondPlace.rankBadge}">🌟 Super Finder</span>
                     <div class="p-3 podium-stat-box rounded-3 shadow-sm mt-auto">
-                        <div class="h4 fw-bold text-primary mb-0" th:text="${secondPlace.totalPoints + ' pts'}">250 pts</div>
+                        <div class="h4 fw-bold podium-pts-silver mb-0" th:text="${secondPlace.totalPoints + ' pts'}">250 pts</div>
                         <div class="small text-muted" th:text="${secondPlace.itemsReturned + ' items reunited'}">2 items reunited</div>
                     </div>
                 </div>
@@ -40,14 +40,14 @@
             <!-- 1st Place (Gold - Elevated in Center) -->
             <div class="col-md-5 col-lg-4 order-1 order-md-2" th:if="${firstPlace != null}">
                 <div class="card card-custom podium-card podium-gold text-center p-4 h-100 position-relative overflow-hidden" style="transform: translateY(-8px);">
-                    <div class="position-absolute top-0 end-0 p-2 text-warning opacity-25">
-                        <i class="fa-solid fa-crown fa-4x"></i>
+                    <div class="podium-watermark text-warning">
+                        <i class="fa-solid fa-crown"></i>
                     </div>
-                    <div class="d-inline-flex align-items-center justify-content-center bg-warning text-dark rounded-circle mx-auto mb-3 shadow-lg" style="width: 76px; height: 76px; font-weight: 800; font-size: 2rem;">
+                    <div class="d-inline-flex align-items-center justify-content-center podium-rank-circle podium-rank-gold mx-auto mb-3 shadow-lg">
                         🥇
                     </div>
                     <h4 class="fw-bold mb-1" th:text="${firstPlace.name}">Finder Name</h4>
-                    <span class="badge bg-warning-subtle text-warning fw-bold mb-3 mx-auto px-3 py-2" th:text="${firstPlace.rankBadge}">🏆 Campus Legend</span>
+                    <span class="badge badge-gold fw-bold mb-3 mx-auto px-3 py-2" th:text="${firstPlace.rankBadge}">🏆 Campus Legend</span>
                     <div class="p-3 podium-stat-box rounded-3 shadow-sm mt-auto">
                         <div class="h3 fw-bold text-warning mb-0" th:text="${firstPlace.totalPoints + ' pts'}">500 pts</div>
                         <div class="small text-muted fw-bold" th:text="${firstPlace.itemsReturned + ' items reunited'}">5 items reunited</div>
@@ -58,16 +58,16 @@
             <!-- 3rd Place (Bronze) -->
             <div class="col-md-4 col-lg-3 order-3 order-md-3" th:if="${thirdPlace != null}">
                 <div class="card card-custom podium-card podium-bronze text-center p-4 h-100 position-relative overflow-hidden">
-                    <div class="position-absolute top-0 end-0 p-2 text-warning opacity-25">
-                        <i class="fa-solid fa-award fa-4x"></i>
+                    <div class="podium-watermark text-warning">
+                        <i class="fa-solid fa-award"></i>
                     </div>
-                    <div class="d-inline-flex align-items-center justify-content-center text-white rounded-circle mx-auto mb-3 shadow" style="width: 64px; height: 64px; font-weight: 800; font-size: 1.5rem; background-color: #d97706;">
+                    <div class="d-inline-flex align-items-center justify-content-center podium-rank-circle podium-rank-bronze mx-auto mb-3 shadow">
                         3rd
                     </div>
                     <h5 class="fw-bold mb-1" th:text="${thirdPlace.name}">Finder Name</h5>
-                    <span class="badge bg-warning-subtle text-warning mb-3 mx-auto px-3 py-1" th:text="${thirdPlace.rankBadge}">🏅 Good Samaritan</span>
+                    <span class="badge badge-bronze mb-3 mx-auto px-3 py-1 fw-semibold" th:text="${thirdPlace.rankBadge}">🏅 Good Samaritan</span>
                     <div class="p-3 podium-stat-box rounded-3 shadow-sm mt-auto">
-                        <div class="h4 fw-bold text-warning mb-0" th:text="${thirdPlace.totalPoints + ' pts'}">150 pts</div>
+                        <div class="h4 fw-bold podium-pts-bronze mb-0" th:text="${thirdPlace.totalPoints + ' pts'}">150 pts</div>
                         <div class="small text-muted" th:text="${thirdPlace.itemsReturned + ' items reunited'}">1 item reunited</div>
                     </div>
                 </div>
@@ -90,27 +90,27 @@
             <!-- Table with Rankings -->
             <div class="table-responsive" th:if="${leaderboard != null and !leaderboard.isEmpty()}">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead class="leaderboard-thead">
                         <tr>
-                            <th scope="col" style="width: 100px;">Rank</th>
+                            <th scope="col" class="ps-4" style="width: 110px;">Rank</th>
                             <th scope="col">Campus Member</th>
                             <th scope="col">Honor Badge</th>
                             <th scope="col" class="text-center">Items Found</th>
                             <th scope="col" class="text-center">Items Reunited</th>
-                            <th scope="col" class="text-end">Total Score</th>
+                            <th scope="col" class="text-end pe-4">Total Score</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="hero : ${leaderboard}">
-                            <td>
-                                <span th:if="${hero.rankNumber == 1}" class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">🥇 #1</span>
-                                <span th:if="${hero.rankNumber == 2}" class="badge bg-secondary text-white px-3 py-2 rounded-pill fw-bold">🥈 #2</span>
-                                <span th:if="${hero.rankNumber == 3}" class="badge text-white px-3 py-2 rounded-pill fw-bold" style="background-color: #d97706;">🥉 #3</span>
-                                <span th:if="${hero.rankNumber > 3}" class="text-muted fw-bold ps-3" th:text="${'#' + hero.rankNumber}">#4</span>
+                            <td class="ps-4">
+                                <span th:if="${hero.rankNumber == 1}" class="badge badge-rank-gold px-3 py-2 rounded-pill fw-bold">🥇 #1</span>
+                                <span th:if="${hero.rankNumber == 2}" class="badge badge-rank-silver px-3 py-2 rounded-pill fw-bold">🥈 #2</span>
+                                <span th:if="${hero.rankNumber == 3}" class="badge badge-rank-bronze px-3 py-2 rounded-pill fw-bold">🥉 #3</span>
+                                <span th:if="${hero.rankNumber > 3}" class="text-muted fw-bold ps-2 fs-6" th:text="${'#' + hero.rankNumber}">#4</span>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-3">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary-light), var(--secondary-light)); color: var(--primary);">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold user-avatar-pill" style="width: 44px; height: 44px;">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
                                     <div>
@@ -120,13 +120,13 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge px-3 py-2 fw-semibold" style="background: rgba(99, 102, 241, 0.12); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.25);" th:text="${hero.rankBadge}">🎖️ Hero</span>
+                                <span class="badge leaderboard-honor-badge" th:text="${hero.rankBadge}">🎖️ Hero</span>
                             </td>
                             <td class="text-center fw-bold fs-6" th:text="${hero.itemsFound}">0</td>
                             <td class="text-center">
                                 <span class="badge bg-success-subtle text-success px-3 py-2 fw-bold" th:text="${hero.itemsReturned}">0</span>
                             </td>
-                            <td class="text-end fw-bold text-primary fs-5 mb-0" th:text="${hero.totalPoints + ' pts'}">0 pts</td>
+                            <td class="text-end fw-bold text-primary fs-5 mb-0 pe-4" th:text="${hero.totalPoints + ' pts'}">0 pts</td>
                         </tr>
                     </tbody>
                 </table>
@@ -151,7 +151,7 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card card-custom p-4 h-100 text-center">
-                    <div class="p-3 rounded-circle bg-primary-subtle text-primary mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                    <div class="p-3 rounded-circle guide-icon-circle guide-icon-primary mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-plus fa-xl"></i>
                     </div>
                     <h5 class="fw-bold mb-1">+25 Points</h5>
@@ -160,7 +160,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card card-custom p-4 h-100 text-center">
-                    <div class="p-3 rounded-circle bg-success-subtle text-success mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                    <div class="p-3 rounded-circle guide-icon-circle guide-icon-success mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-handshake-angle fa-xl"></i>
                     </div>
                     <h5 class="fw-bold mb-1">+100 Points</h5>
@@ -169,7 +169,7 @@
             </div>
             <div class="col-md-4">
                 <div class="card card-custom p-4 h-100 text-center">
-                    <div class="p-3 rounded-circle bg-warning-subtle text-warning mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                    <div class="p-3 rounded-circle guide-icon-circle guide-icon-warning mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-crown fa-xl"></i>
                     </div>
                     <h5 class="fw-bold mb-1">Campus Badges</h5>

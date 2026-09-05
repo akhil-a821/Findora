@@ -47,7 +47,7 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/", "/login", "/register", "/browse", "/leaderboard", "/item/**",
+                    "/", "/login", "/register", "/forgot-password", "/browse", "/leaderboard", "/item/**",
                     "/css/**", "/js/**", "/images/**", "/uploads/**", "/h2-console/**"
                 ).permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
